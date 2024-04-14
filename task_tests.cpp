@@ -27,3 +27,8 @@ TEST(roman, test) {
 	roman_num = "XIV";
 	cout << roman_num << " --> " << roman_to_arabic(roman_num, table1) << endl;
 }
+
+TEST(romanrandom, test) {
+	HashTable<char, int> table1(10);
+	table1.print();
+}

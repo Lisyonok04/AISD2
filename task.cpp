@@ -4,8 +4,12 @@
 #include <random>
 #include <memory>
 #include <string>
+#include <type_traits>
 
 using namespace std;
+template<typename K, typename T>
+concept good_for_rome = is_same_v <T, int> && is_same_v <K, char>;
+
 
 char get_roman_num() {
 	string mass = "IVXLCDM";
@@ -50,6 +54,19 @@ private:
 		}
 		return hash;
 	}
+	void overflow() {
+		if (_count / _data.size() >= 0.5) {
+			cout << "Size changed to " << _data.size() * 2 + 1 << endl;
+			vector<Node<K, T>> old_data = _data;
+			vector<Node<K, T>> new_data;
+			new_data.resize(_data.size() * 2 + 1);
+			_data = new_data;
+			for (auto& i : old_data) {
+				insert(i.key, i.value);
+			}
+		}
+	}
+
 public:
 
 	HashTable() { 
@@ -67,11 +84,12 @@ public:
 		_count = other._count;
 	}
 
-	/*HashTable(size_t len, size_t count) {
-		for (int i = 0, i < count, i++) {
-			
+	HashTable(size_t count) requires (good_for_rome <K, T>) {
+		_data.resize(count);
+		for (int i = 0; i < count; i++) {
+			insert(get_roman_num(), i);
 		}
-	}*/
+	}
 
 	~HashTable() = default;
 
@@ -107,6 +125,7 @@ public:
 			_data[position].value = value;
 			_data[position].status = filled;
 			_count ++;
+			overflow();
 			return true;
 		}
 		else {
@@ -118,6 +137,7 @@ public:
 					_data[position].value = value;
 					_data[position].status = filled;
 					_count++;
+					overflow();
 					break;
 				}
 				i++;
@@ -135,6 +155,7 @@ public:
 		if (_data[position].status != filled) {
 			_data[position].status = filled;
 			count++;
+			overflow();
 		}
 		return true;
 	}
