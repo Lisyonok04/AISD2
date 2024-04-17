@@ -29,6 +29,6 @@ TEST(roman, test) {
 }
 
 TEST(romanrandom, test) {
-	HashTable<char, int> table1(10);
+	HashTable<string, int> table1(10, 10);
 	table1.print();
 }

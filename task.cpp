@@ -8,7 +8,8 @@
 
 using namespace std;
 template<typename K, typename T>
-concept good_for_rome = is_same_v <T, int> && is_same_v <K, char>;
+concept good_for_rome = is_same_v <T, int> && is_same_v <K, string>;
+//concept good_for_rome = is_same_v <T, int> && is_same_v <K, char>;
 
 
 char get_roman_num() {
@@ -29,14 +30,14 @@ private:
 		K key;
 		T value;
 		State status;
-		Node() : key(NAN), value(NAN), status(empty) {};
+		Node() : key(), value(), status(empty) {};
 		void print() {
 			if (status == filled) {
 				cout << key << ":" << value << endl;
 			}
 		}
 		void del() {
-			key = nullptr;
+			key = nullptr;			
 			value = nullptr;
 			status = deleted;
 		}
@@ -61,11 +62,13 @@ private:
 			vector<Node<K, T>> new_data;
 			new_data.resize(_data.size() * 2 + 1);
 			_data = new_data;
+			_count = 0;
 			for (auto& i : old_data) {
 				insert(i.key, i.value);
 			}
 		}
 	}
+
 
 public:
 
@@ -84,10 +87,22 @@ public:
 		_count = other._count;
 	}
 
-	HashTable(size_t count) requires (good_for_rome <K, T>) {
+	/*HashTable(size_t count) requires (good_for_rome <K, T>) {
 		_data.resize(count);
 		for (int i = 0; i < count; i++) {
 			insert(get_roman_num(), i);
+		}
+	}*/
+
+	HashTable(size_t size, size_t count) requires (good_for_rome <K, T>) {
+		_data.resize(count + 1);
+		string k;
+		for (int i = 0; i < count; i++) {
+			k = "";
+			for (int j = 0; j < size; j++) {
+				k += get_roman_num();
+			}
+			insert(k, i);
 		}
 	}
 
